@@ -21,6 +21,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Wait for Redis
+      run: |
+            for i in {1..5}; do 
+              nc -z 127.0.0.1 6379 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed Waiting for Redis && exit 1
+        
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
